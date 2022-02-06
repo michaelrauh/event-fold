@@ -20,9 +20,8 @@ class Session:
         for sentence in sentences:
             for (f, s) in more_itertools.windowed(sentence, n=2):
                 ex = self.collection.forwards.find_one({"from": f, "to": s})
-                print(f"considering inserting {f, s}")
                 if not ex:
-                    print("inserting")
+                    print(f"inserting {f, s}")
                     self.collection.forwards.insert_one({"from": f, "to": s})
                 else:
                     print(f"dropping {f, s}")

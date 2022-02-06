@@ -19,7 +19,13 @@ class Session:
         sentences = self._text_to_sentence_token_list(s)
         for sentence in sentences:
             for (f, s) in more_itertools.windowed(sentence, n=2):
-                self.collection.forwards.update_one({"from": f}, {"$addToSet": {"to": s}}, upsert=True)
+                ex = self.collection.forwards.find_one({"from": f, "to": s})
+                print(f"considering inserting {f, s}")
+                if not ex:
+                    print("inserting")
+                    self.collection.forwards.insert_one({"from": f, "to": s})
+                else:
+                    print(f"dropping {f, s}")
 
     @staticmethod
     def _text_to_sentence_token_list(s):
@@ -33,4 +39,4 @@ if __name__ == '__main__':
                      tls=True,
                      tlsCertificateKeyFile='X509-cert-5204489386261822956.pem', tlsCAFile=certifi.where())
     session = start_session(client)
-    session.ingest("a b. c d. e f. g h.")
+    session.ingest("q r.")

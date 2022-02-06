@@ -39,4 +39,4 @@ if __name__ == '__main__':
                      tls=True,
                      tlsCertificateKeyFile='X509-cert-5204489386261822956.pem', tlsCAFile=certifi.where())
     session = start_session(client)
-    session.ingest("q r.")
+    session.ingest("q r s t u v w x.")

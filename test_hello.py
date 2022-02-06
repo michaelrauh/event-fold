@@ -6,7 +6,7 @@ import hello as subject
 class MyTestCase(unittest.TestCase):
     def test_it_inserts_a_forward(self):
         client = mongomock.MongoClient()
-        collection = client.config
+        collection = client.top
         session = subject.start_session(client)
         session.ingest('a b.')
         result = collection.forwards.find_one({'from': 'a'})
@@ -14,7 +14,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_it_updates_forward(self):
         client = mongomock.MongoClient()
-        collection = client.config
+        collection = client.top
         session = subject.start_session(client)
         session.ingest('a b. a c.')
         result = collection.forwards.find_one({'from': 'a'})
@@ -22,7 +22,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_it_can_ingest_in_multiple_chunks(self):
         client = mongomock.MongoClient()
-        collection = client.config
+        collection = client.top
         session = subject.start_session(client)
         session.ingest('a b.')
         session.ingest('a c.')
@@ -31,7 +31,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_it_can_persist_across_objects(self):
         client = mongomock.MongoClient()
-        collection = client.config
+        collection = client.top
         session = subject.start_session(client)
         session.ingest('a b.')
         session = subject.start_session(client)

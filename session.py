@@ -15,14 +15,20 @@ class Session:
         self.db = database
         self.collection = self.db.top
 
+    def project_backward(self, x):
+        return {found['from'] for found in self.collection.pairs.find({"to": x})}
+
+    def project_forward(self, x):
+        return {found['to'] for found in self.collection.pairs.find({"from": x})}
+
     def ingest(self, s):
         sentences = self._text_to_sentence_token_list(s)
         for sentence in sentences:
             for (f, s) in more_itertools.windowed(sentence, n=2):
-                ex = self.collection.forwards.find_one({"from": f, "to": s})
+                ex = self.collection.pairs.find_one({"from": f, "to": s})
                 if not ex:
                     print(f"inserting {f, s}")
-                    self.collection.forwards.insert_one({"from": f, "to": s})
+                    self.collection.pairs.insert_one({"from": f, "to": s})
                 else:
                     print(f"dropping {f, s}")
 

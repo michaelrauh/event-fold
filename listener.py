@@ -1,8 +1,8 @@
 import certifi
 import pymongo
 
-def handle_new_forward(f, s):
-    print(f, s)
+import pair
+from session import Session
 
 if __name__ == '__main__':
     uri = "mongodb+srv://cluster0.t0zld.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
@@ -13,5 +13,4 @@ if __name__ == '__main__':
         with client.watch() as stream:
             for change in stream:
                 doc = change['fullDocument']
-                print(doc)
-                handle_new_forward(doc['from'], doc['to'])
+                pair.new_pair(Session(client), doc['from'], doc['to'])

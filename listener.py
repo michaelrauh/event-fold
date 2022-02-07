@@ -1,6 +1,7 @@
 import certifi
 import pymongo
 
+import ortho
 import pair
 from session import Session
 
@@ -12,5 +13,10 @@ if __name__ == '__main__':
     while True:
         with client.watch() as stream:
             for change in stream:
-                doc = change['fullDocument']
-                pair.new_pair(Session(client), doc['from'], doc['to'])
+                t = change['ns']['coll']
+                if t == 'pairs':
+                    doc = change['fullDocument']
+                    pair.new_pair(Session(client), doc['from'], doc['to'])
+                elif t == 'orthos':
+                    doc = change['fullDocument']
+                    ortho.new_ortho(Session(client), doc['data'])

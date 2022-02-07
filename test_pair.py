@@ -1,29 +1,60 @@
 import unittest
-import mongomock
-import pair as subject
 
+import mongomock
+
+import ortho
+import pair as subject
 import session
 
 
 class MyTestCase(unittest.TestCase):
-    def test_it_attempts_forward_ex_nihilo(self):
+    def test_it_attempts_b_d_ex_nihilo(self):
         client = mongomock.MongoClient()
         collection = client.top
-        session = ingestor.start_session(client)
-        session.ingest('a b. c d. a c. b d.')
-        subject.new_pair(session, "b", "d")
-        ortho = [{"": "a"}, {"b": "b"}, {"c": "c"}, {"b.c": "d"}]
-        self.assertEqual(ortho, collection.orthos.find_one(ortho)['data'])
+        s = session.start_session(client)
+        s.ingest('A b.')
+        s.ingest('C d.')
+        s.ingest('A c.')
+        s.ingest('B d.')
+        subject.new_pair(s, "b", "d")
+        o = ortho.create("a", "b", "c", "d")
+        self.assertEqual(o, collection.orthos.find_one({"data": o})['data'])
 
-# todo it ignores preexisting orthos even if they are rotated
+    def test_it_attempts_a_b_ex_nihilo(self):
+        client = mongomock.MongoClient()
+        collection = client.top
+        s = session.start_session(client)
+        s.ingest('C d.')
+        s.ingest('A c.')
+        s.ingest('B d.')
+        s.ingest('A b.')
+        subject.new_pair(s, "a", "b")
+        o = ortho.create("a", "b", "c", "d")
+        self.assertEqual(o, collection.orthos.find_one({"data": o})['data'])
 
-# todo these can come in any order, and in any forward/backward layout that makes 8 cases
+    def test_it_attempts_c_d_ex_nihilo(self):
+        client = mongomock.MongoClient()
+        collection = client.top
+        s = session.start_session(client)
+        s.ingest('A c.')
+        s.ingest('B d.')
+        s.ingest('A b.')
+        s.ingest('C d.')
+        subject.new_pair(s, "c", "d")
+        o = ortho.create("a", "b", "c", "d")
+        self.assertEqual(o, collection.orthos.find_one({"data": o})['data'])
 
-# a b
-# c d
-
-# a c
-# b d
+    def test_it_attempts_a_c_ex_nihilo(self):
+        client = mongomock.MongoClient()
+        collection = client.top
+        s = session.start_session(client)
+        s.ingest('B d.')
+        s.ingest('A b.')
+        s.ingest('C d.')
+        s.ingest('A c.')
+        subject.new_pair(s, "a", "c")
+        o = ortho.create("a", "b", "c", "d")
+        self.assertEqual(o, collection.orthos.find_one({"data": o})['data'])
 
 
 if __name__ == '__main__':

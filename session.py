@@ -4,6 +4,7 @@ import certifi as certifi
 import nltk
 import pymongo
 import more_itertools
+import ortho
 
 
 def start_session(mongo):
@@ -37,6 +38,15 @@ class Session:
         return [[word.translate(str.maketrans('', '', string.punctuation)).lower() for word in sentence if word.translate(str.maketrans('', '', string.punctuation)).isalpha()] for sentence in
                 [nltk.word_tokenize(t) for t in nltk.sent_tokenize(s)]]
 
+    def ex_nihilo(self, a, b, c, d):
+        desired = ortho.create(a, b, c, d)
+        ex = self.collection.orthos.find_one({"data": desired})
+        if not ex:
+            print(f"inserting {a, b, c, d}")
+            self.collection.orthos.insert_one({"data": desired})
+        else:
+            print(f"dropping {a, b, c, d}")
+
 
 if __name__ == '__main__':
     uri = "mongodb+srv://cluster0.t0zld.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
@@ -44,4 +54,4 @@ if __name__ == '__main__':
                      tls=True,
                      tlsCertificateKeyFile='X509-cert-5204489386261822956.pem', tlsCAFile=certifi.where())
     session = start_session(client)
-    session.ingest("q r s t u v w x.")
+    session.ingest("e f.")

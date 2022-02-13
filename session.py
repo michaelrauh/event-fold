@@ -16,6 +16,12 @@ class Session:
         self.db = database
         self.collection = self.db.top
 
+    def delete_pair(self, f, t):
+        self.collection.pairs.delete_one({"from": f, "to": t})
+
+    def delete_ortho(self, o):
+        self.collection.orthos.delete_one({"data": o})
+
     def project_backward(self, x):
         return {found['from'] for found in self.collection.pairs.find({"to": x})}
 

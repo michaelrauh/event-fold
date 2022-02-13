@@ -83,6 +83,22 @@ class MyTestCase(unittest.TestCase):
         res = s.ortho_with_name("b")
         self.assertEqual(res[0], expected)
 
+    def test_it_can_delete_a_pair_for_testing_purposes(self):
+        client = mongomock.MongoClient()
+        s = subject.start_session(client)
+        s.ingest("a b.")
+        s.delete_pair("a", "b")
+        self.assertIsNone(s.collection.pairs.find_one({"from": "a", "to": "b"}))
+
+
+    def test_it_can_delete_an_ortho_for_testing_purposes(self):
+        client = mongomock.MongoClient()
+        s = subject.start_session(client)
+        o = ortho.create("a", "b", "c", "d")
+        s.add_ortho(o)
+        s.delete_ortho(o)
+        self.assertIsNone(s.collection.orthos.find_one({"data": o}))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -21,11 +21,11 @@ class MyTestCase(unittest.TestCase):
                                      tlsCAFile=certifi.where())
         session = start_session(client)
 
-        session.collection.pairs.delete_one({"from": "a", "to": "b"})  # todo hide deletes behind session
-        session.collection.pairs.delete_one({"from": "c", "to": "d"})
-        session.collection.pairs.delete_one({"from": "a", "to": "c"})
-        session.collection.pairs.delete_one({"from": "b", "to": "d"})
-        session.collection.orthos.delete_one({"data": expected})
+        session.delete_pair("a", "b")
+        session.delete_pair("c", "d")
+        session.delete_pair("a", "c")
+        session.delete_pair("b", "d")
+        session.delete_ortho(expected)
 
         session.ingest("A b.")
         session.ingest("C d.")

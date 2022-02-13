@@ -89,7 +89,6 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(o, collection.orthos.find_one({"data": o})['data'])
 
 # TODO:
-# integrated
 # non-base dimension
 # different shapes
 # hop projection

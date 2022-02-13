@@ -33,25 +33,28 @@ class Session:
                 else:
                     print(f"dropping {f, s}")
 
+    def ortho_with_name(self, name):
+        return [res['data'] for res in self.collection.orthos.find({"data": {"$elemMatch": {"$in": [name]}}})]
+
     @staticmethod
     def _text_to_sentence_token_list(s):
-        return [[word.translate(str.maketrans('', '', string.punctuation)).lower() for word in sentence if word.translate(str.maketrans('', '', string.punctuation)).isalpha()] for sentence in
+        return [[word.translate(str.maketrans('', '', string.punctuation)).lower() for word in sentence if
+                 word.translate(str.maketrans('', '', string.punctuation)).isalpha()] for sentence in
                 [nltk.word_tokenize(t) for t in nltk.sent_tokenize(s)]]
 
-    def ex_nihilo(self, a, b, c, d):
-        desired = ortho.create(a, b, c, d)
+    def add_ortho(self, desired):
         ex = self.collection.orthos.find_one({"data": desired})
         if not ex:
-            print(f"inserting {a, b, c, d}")
+            print(f"inserting {desired}")
             self.collection.orthos.insert_one({"data": desired})
         else:
-            print(f"dropping {a, b, c, d}")
+            print(f"dropping {desired}")
 
 
 if __name__ == '__main__':
     uri = "mongodb+srv://cluster0.t0zld.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri,
-                     tls=True,
-                     tlsCertificateKeyFile='X509-cert-5204489386261822956.pem', tlsCAFile=certifi.where())
+                                 tls=True,
+                                 tlsCertificateKeyFile='X509-cert-5204489386261822956.pem', tlsCAFile=certifi.where())
     session = start_session(client)
     session.ingest("e f.")

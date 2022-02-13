@@ -1,4 +1,5 @@
 import unittest
+
 import mongomock
 
 import ortho
@@ -54,26 +55,33 @@ class MyTestCase(unittest.TestCase):
         result = session.project_forward('a')
         self.assertEqual({'b', 'c'}, result)
 
-    def test_it_creates_ex_nihilo(self):
+    def test_it_adds_ortho(self):
         client = mongomock.MongoClient()
         collection = client.top
         s = subject.start_session(client)
-        s.ex_nihilo("a", "b", "c", "d")
         expected = ortho.create("a", "b", "c", "d")
+        s.add_ortho(expected)
         result = collection.orthos.find_one({"data": expected})['data']
         self.assertEqual(expected, result)
-
 
     def test_it_will_not_double_insert_orthos(self):
         client = mongomock.MongoClient()
         collection = client.top
         s = subject.start_session(client)
         expected = ortho.create("a", "b", "c", "d")
-        s.ex_nihilo("a", "b", "c", "d")
-        s.ex_nihilo("a", "c", "b", "d")
+        s.add_ortho(expected)
+        s.add_ortho(expected)
         result = len(list(collection.orthos.find({"data": expected})))
 
         self.assertEqual(1, result)
+
+    def test_it_can_find_an_ortho_with_a_name(self):
+        client = mongomock.MongoClient()
+        s = subject.start_session(client)
+        expected = ortho.create("a", "b", "c", "d")
+        s.add_ortho(expected)
+        res = s.ortho_with_name("b")
+        self.assertEqual(res[0], expected)
 
 
 if __name__ == '__main__':

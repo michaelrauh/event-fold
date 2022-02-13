@@ -36,7 +36,7 @@ class MyTestCase(unittest.TestCase):
         p.communicate()
         print("stopped listener")
 
-        found = session.collection.orthos.find_one()['data']
+        found = session.collection.orthos.find_one()['data'] #  TODO: remove all data, to, from subscripting as it leaks DB details
         self.assertEqual(expected, found)
 
 

@@ -5,6 +5,7 @@ import ortho
 import pair
 from session import Session
 
+# todo: dedup DB connection and read details from env.
 if __name__ == '__main__':
     print("listening")
     uri = "mongodb+srv://cluster0.t0zld.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"

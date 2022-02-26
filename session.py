@@ -40,7 +40,7 @@ class Session:
                     print(f"dropping {f, s}")
 
     def ortho_with_name(self, name):
-        return [res['data'] for res in self.collection.orthos.find({"data": {"$elemMatch": {"$in": [name]}}})]
+        return [res['data'] for res in self.collection.orthos.find({"data": {"$elemMatch": {"$in": [name]}}})] # todo make ortho a class, and have it serialize on input. Serialization can include redundant info like origin. Then return the orthos and why. Split this method in three.
 
     @staticmethod
     def _text_to_sentence_token_list(s):

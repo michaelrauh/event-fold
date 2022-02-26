@@ -25,7 +25,7 @@ def diagonal_works(left, right):
 
 
 def up(session, f, s):
-    for (left, right) in itertools.product(session.ortho_with_name(f), session.ortho_with_name(s)):
+    for left, right in itertools.product(session.ortho_with_name(f), session.ortho_with_name(s)):
         left_type = ortho.position(left, f)
         right_type = ortho.position(right, s)
         if left_type == right_type == ortho.Position.ORIGIN:
@@ -46,6 +46,8 @@ def ex_nihilo(session, f, s):
 
 
 def a_b_mapping(session, a, b):
+    # a b
+    # c d
     for d in session.project_forward(b):
         for c in session.project_backward(d):
             if b != c:

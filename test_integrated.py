@@ -1,5 +1,4 @@
 import subprocess
-import unittest
 from time import sleep
 
 import certifi
@@ -9,7 +8,7 @@ import ortho
 from session import start_session
 
 
-class MyTestCase(unittest.TestCase):
+class TestIntegration:
     def test_ex_nihilo(self):
         expected = ortho.create("a", "b", "c", "d")
         print("starting listener")
@@ -37,8 +36,4 @@ class MyTestCase(unittest.TestCase):
         print("stopped listener")
 
         found = session.collection.orthos.find_one()['data'] #  TODO: remove all data, to, from subscripting as it leaks DB details
-        self.assertEqual(expected, found)
-
-
-if __name__ == '__main__':
-    unittest.main()
+        assert expected == found

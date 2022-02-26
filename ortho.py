@@ -7,8 +7,8 @@ class Position(Enum):
     OTHER = auto()
 
 
-def create(a, b, c, d):
-    return sorted([[a, []], [b, [b]], [c, [c]], [d, (sorted([b, c]))]])
+def create(x11, x12, x21, x22):
+    return sorted([[x11, []], [x12, [x12]], [x21, [x21]], [x22, (sorted([x12, x21]))]])
 
 
 def new_ortho(session, ortho):
@@ -24,7 +24,7 @@ def translate_coordinates(ortho, axis_mapping):
     return [[node[0], [axis_mapping[name] for name in node[1]]] for node in ortho]
 
 
-def augment_coordinates(ortho, augmenting_axis):
+def augment_coordinates(ortho, augmenting_axis): # todo: there is a missing test here that coordinates end up sorted during augmentation
     return [[node[0], node[1] + [augmenting_axis]] for node in ortho]
 
 

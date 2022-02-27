@@ -29,7 +29,7 @@ class TestPair:
         current_session.ingest('B d.')
         subject.new_pair(current_session, "b", "d")
         o = ortho.create("a", "b", "c", "d")
-        assert o == collection.orthos.find_one({"data": o})['data']
+        assert o == current_session.get_one_ortho()
 
     def test_it_attempts_a_b_ex_nihilo(self, current_session, collection):
         current_session.ingest('C d.')
@@ -38,7 +38,7 @@ class TestPair:
         current_session.ingest('A b.')
         subject.new_pair(current_session, "a", "b")
         o = ortho.create("a", "b", "c", "d")
-        assert o == collection.orthos.find_one({"data": o})['data']
+        assert o == current_session.get_one_ortho()
 
     def test_it_attempts_c_d_ex_nihilo(self, current_session, collection):
         current_session.ingest('A c.')
@@ -47,7 +47,7 @@ class TestPair:
         current_session.ingest('C d.')
         subject.new_pair(current_session, "c", "d")
         o = ortho.create("a", "b", "c", "d")
-        assert o == collection.orthos.find_one({"data": o})['data']
+        assert o == current_session.get_one_ortho()
 
     def test_it_attempts_a_c_ex_nihilo(self, current_session, collection):
         current_session.ingest('B d.')
@@ -56,7 +56,7 @@ class TestPair:
         current_session.ingest('A c.')
         subject.new_pair(current_session, "a", "c")
         o = ortho.create("a", "b", "c", "d")
-        assert o == collection.orthos.find_one({"data": o})['data']
+        assert o == current_session.get_one_ortho()
 
     def test_it_attempts_an_up_using_a_pair_and_existing_orthos_using_origin_projection(self, current_session, collection):
         # todo insert base check for up
@@ -85,7 +85,7 @@ class TestPair:
         current_session.ingest('a e')
         subject.new_pair(current_session, "a", "e")
 
-        assert o == collection.orthos.find_one({"data": o})['data']
+        assert o == current_session.get_matching_ortho(o)
 
 # TODO:
 # non-base dimension

@@ -24,10 +24,10 @@ class TestIntegration:
         session.ingest("C d.")
         session.ingest("A c.")
         session.ingest("B d.")
-        sleep(5)  # todo: allow listener to notify when done
+        sleep(5)
         p.terminate()
         p.communicate()
         print("stopped listener")
 
-        found = session.collection.orthos.find_one()['data'] #  TODO: remove all data, to, from subscripting as it leaks DB details
+        found = session.get_one_ortho()
         assert expected == found

@@ -90,6 +90,12 @@ class Session:
     def get_data(change):
         return change['fullDocument']['data']
 
+    def get_one_ortho(self): # todo unit test
+        return self.collection.orthos.find_one()['data']
+
+    def get_matching_ortho(self, o):
+        return self.collection.orthos.find_one({"data": o})['data']
+
 
 if __name__ == '__main__':
     session = start_session(MongoClient.client)

@@ -13,9 +13,6 @@ def listen(session, change):
         ortho.new_ortho(session, session.get_data(change))
     print("idle")
 
-# todo add missing unit tests - this was integration tested up front and so is missing them
-# todo implement a sweeper that replays all events. There can be a max of one of these per DB.
-
 
 if __name__ == '__main__':
     while True:

@@ -1,10 +1,22 @@
 import string
+from enum import Enum, auto
 
-import certifi as certifi
-import nltk
-import pymongo
 import more_itertools
-import ortho
+import nltk
+
+import MongoClient
+
+
+class ChangeType(Enum):
+    PAIRS = auto()
+    ORTHOS = auto()
+
+    @staticmethod
+    def from_str(label):
+        if label == "pairs":
+            return ChangeType.PAIRS
+        elif label == "orthos":
+            return ChangeType.ORTHOS
 
 
 def start_session(mongo):
@@ -27,6 +39,12 @@ class Session:
 
     def project_forward(self, x):
         return {found['to'] for found in self.collection.pairs.find({"from": x})}
+
+    def listen_on_change(self, action):  # todo unit test
+        print("listening")
+        with self.db.watch() as stream:
+            for change in stream:
+                action(self, change)
 
     def ingest(self, s):
         sentences = self._text_to_sentence_token_list(s)
@@ -56,11 +74,23 @@ class Session:
         else:
             print(f"dropping {desired}")
 
+    @staticmethod  # todo unit test
+    def change_type(change):
+        return ChangeType.from_str(change['ns']['coll'])
+
+    @staticmethod  # todo unit test
+    def get_from(change):
+        return change['fullDocument']['from']
+
+    @staticmethod  # todo unit test
+    def get_to(change):
+        return change['fullDocument']['to']
+
+    @staticmethod  # todo unit test
+    def get_data(change):
+        return change['fullDocument']['data']
+
 
 if __name__ == '__main__':
-    uri = "mongodb+srv://cluster0.t0zld.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
-    client = pymongo.MongoClient(uri,
-                                 tls=True,
-                                 tlsCertificateKeyFile='X509-cert-5204489386261822956.pem', tlsCAFile=certifi.where())
-    session = start_session(client)
+    session = start_session(MongoClient.client)
     session.ingest("e f.")

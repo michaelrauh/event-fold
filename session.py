@@ -74,23 +74,23 @@ class Session:
         else:
             print(f"dropping {desired}")
 
-    @staticmethod  # todo unit test
+    @staticmethod
     def change_type(change):
         return ChangeType.from_str(change['ns']['coll'])
 
-    @staticmethod  # todo unit test
+    @staticmethod
     def get_from(change):
         return change['fullDocument']['from']
 
-    @staticmethod  # todo unit test
+    @staticmethod
     def get_to(change):
         return change['fullDocument']['to']
 
-    @staticmethod  # todo unit test
+    @staticmethod
     def get_data(change):
         return change['fullDocument']['data']
 
-    def get_one_ortho(self): # todo unit test
+    def get_one_ortho(self):
         return self.collection.orthos.find_one()['data']
 
     def get_matching_ortho(self, o):
